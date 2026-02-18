@@ -1,0 +1,101 @@
+/* Layout Styles */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-brand h1 {
+  color: white;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.app-nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-nav a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.app-nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.app-nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Main Content */
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  background: #f5f7fa;
+}
+
+/* Footer */
+.app-footer {
+  background: #2d3748;
+  color: #a0aec0;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.env-badge {
+  background: #4a5568;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .app-nav ul {
+    gap: 0.5rem;
+  }
+
+  .app-nav a {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .app-main {
+    padding: 1rem;
+  }
+}

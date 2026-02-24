@@ -216,8 +216,177 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .page {
+    max-width: 100%;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .tech-list {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
+  .page h2 {
+    font-size: 1.5rem;
+  }
+
+  .page-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Dashboard */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-card {
+    padding: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .dev-info {
+    padding: 0.875rem;
+  }
+
+  .dev-info h4 {
+    font-size: 0.95rem;
+  }
+
+  /* About */
+  .about-section {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .tech-list {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .tech-list li {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Settings */
+  .settings-section {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.875rem 0;
+  }
+
+  .setting-item select {
+    width: 100%;
+  }
+
+  /* Not Found */
   .not-found-content h1 {
     font-size: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page h2 {
+    font-size: 1.35rem;
+  }
+
+  .page-description {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Dashboard */
+  .dashboard-card {
+    padding: 1rem;
+  }
+
+  .dashboard-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .dev-info {
+    padding: 0.75rem;
+  }
+
+  .dev-info p {
+    font-size: 0.8rem;
+  }
+
+  /* About */
+  .about-section {
+    padding: 1rem;
+  }
+
+  .about-section h3 {
+    font-size: 1rem;
+  }
+
+  .tech-list {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-list li {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Settings */
+  .settings-section {
+    padding: 1rem;
+  }
+
+  .settings-section h3 {
+    font-size: 1rem;
+  }
+
+  .env-info {
+    padding: 0.75rem;
+  }
+
+  .env-info p {
+    font-size: 0.8rem;
+  }
+
+  /* Not Found */
+  .not-found-content h1 {
+    font-size: 3.5rem;
+  }
+
+  .not-found-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .not-found-content p {
+    font-size: 0.9rem;
+  }
+
+  .back-home-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
   }
 }

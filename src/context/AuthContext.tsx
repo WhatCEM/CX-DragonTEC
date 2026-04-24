@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
 interface AuthUser {
   id: string;
   email: string;
   name: string;
+  accessType?: string;
 }
 
 interface AuthContextType {
@@ -25,40 +27,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Al montar, leer el JWT de localStorage y validarlo contra el backend
+  // Al montar, leer el token de localStorage
   useEffect(() => {
     const storedToken = localStorage.getItem(TOKEN_KEY);
-    if (!storedToken) {
-      setIsLoading(false);
-      return;
+    const storedUser = localStorage.getItem(USER_KEY);
+    
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
     }
-
-    // Verificar que el token sigue siendo válido
-    fetch(`${API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${storedToken}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Token inválido');
-        return res.json();
-      })
-      .then((data) => {
-        setToken(storedToken);
-        setUser(data.data);
-      })
-      .catch(() => {
-        localStorage.removeItem(TOKEN_KEY);
-      })
-      .finally(() => setIsLoading(false));
+    setIsLoading(false);
   }, []);
 
   const login = (newToken: string, newUser: AuthUser) => {
     localStorage.setItem(TOKEN_KEY, newToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
   };
@@ -79,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook personalizado — curso de udemy sección 12
+// Hook personalizado
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth debe usarse dentro de <AuthProvider>');

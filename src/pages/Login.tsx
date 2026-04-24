@@ -1,12 +1,12 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';  // ← Quita Link si no lo usas
 import { useAuth } from '../context/AuthContext';
 import ForgotPasswordModal from '../pages/ForgotPasswordModal';
-import '../styles/login.css';
+import '../styles/login.css';   
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-interface FormErrors {components
+interface FormErrors {
   email?: string;
   password?: string;
   general?: string;
@@ -21,7 +21,7 @@ const Login = () => {
   const [errors, setErrors]     = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPass, setShowPass]   = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Nuevo estado para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const validate = (): boolean => {
     const e: FormErrors = {};
@@ -56,13 +56,27 @@ const Login = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setErrors({ general: data.message || 'Credenciales incorrectas' });
+        setErrors({ general: data.msg || 'Credenciales incorrectas' });
         return;
       }
 
-      login(data.data.token, data.data.user);
+      const token = data.token;
+     const user = { 
+  id: data.uid, 
+  name: data.name, 
+  email: email,
+  accessType: data.accessType || 'regular'  // ← Usar el accessType del backend
+};
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      if (login) {
+        login(token, user);
+      }
+      
       navigate('/', { replace: true });
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error);
       setErrors({ general: 'Error de red. Intenta de nuevo.' });
     } finally {
       setIsLoading(false);
@@ -72,11 +86,9 @@ const Login = () => {
   return (
     <>
       <div className="login-root">
-
-        {/* ── Panel izquierdo ───────────────────────── */}
+        {/* Panel izquierdo */}
         <div className="login-left" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <div className="login-left__noise" />
-
           <header className="login-brand">
             <div className="login-brand__icon">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -88,20 +100,16 @@ const Login = () => {
             </div>
             <span className="login-brand__name">CX Dtec</span>
           </header>
-
-          {/* CONTENEDOR DE POSICIONAMIENTO: Centra verticalmente, alinea a la izquierda horizontalmente */}
           <div className="login-left__body" style={{ 
             flex: 1, 
             display: 'flex', 
             flexDirection: 'column', 
-            justifyContent: 'center', /* Mantiene el centrado vertical */
-            alignItems: 'flex-start',  /* Alinea todo el bloque a la izquierda */
-            paddingLeft: '10%',       /* Pequeño colchón para que no toque el borde */
-            paddingRight: '10%'       /* Evita que se pegue al borde derecho */
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            paddingLeft: '10%',
+            paddingRight: '10%'
           }}>
-            {/* CAJA INTERNA: El texto mantiene su alineación original y ancho controlado */}
             <div style={{ textAlign: 'left', maxWidth: '550px' }}>
-              {/* Título sin <br /> para reducir renglones */}
               <h1 className="login-hero" style={{ margin: 0, lineHeight: '1.2' }}>
                 Gestiona tu operación en un solo lugar
               </h1>
@@ -110,35 +118,32 @@ const Login = () => {
               </p>
             </div>
           </div>
-
           <footer className="login-footer">
             © {new Date().getFullYear()} CX Dtec Inc. Todos los derechos reservados.
           </footer>
         </div>
 
-        {/* ── Panel derecho ────────────────────────── */}
+        {/* Panel derecho */}
         <div className="login-right" style={{ 
           flex: 1, 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center', 
-          backgroundColor: '#f8fafc' // Un fondo ligeramente gris para que la caja blanca resalte
+          backgroundColor: '#f8fafc'
         }}>
-          {/* Esta es la nueva "caja" contenedora */}
           <div className="login-card" style={{ 
             width: '100%', 
             maxWidth: '440px', 
             backgroundColor: '#ffffff', 
             padding: '2.5rem', 
-            borderRadius: '16px', // Bordes redondeados modernos
-            border: '1px solid #e2e8f0', // Un borde sutil
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)' // Sombra suave
+            borderRadius: '16px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)'
           }}>
-            <h2 className="login-card__title">Iniciar sesión</h2>
+            <h2 className="login-card__title">Iniciar sesión</h2> 
             <p className="login-card__sub">Accede a tu cuenta de CX Dtec</p>
 
             <form onSubmit={handleSubmit} noValidate className="login-form">
-              {/* Campo de email */}
               <div className="lf-field">
                 <label htmlFor="email">Correo electrónico</label>
                 <div className={`lf-input-wrap ${errors.email ? 'is-error' : ''}`}>
@@ -161,7 +166,6 @@ const Login = () => {
                 {errors.email && <span className="lf-error">{errors.email}</span>}
               </div>
 
-              {/* Campo de contraseña */}
               <div className="lf-field">
                 <label htmlFor="password">Contraseña</label>
                 <div className={`lf-input-wrap ${errors.password ? 'is-error' : ''}`}>
@@ -179,20 +183,14 @@ const Login = () => {
                     className="lf-icon lf-icon--btn"
                     onClick={() => setShowPass((v) => !v)}
                     tabIndex={-1}
-                    aria-label={showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                   >
                     {showPass ? (
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2 2L14 14" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                        <path d="M6.5 6.7A2 2 0 0 0 9.3 9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                        <path d="M4 4.3C2.6 5.3 1.5 6.5 1 8c1.1 3 4 5 7 5 1.4 0 2.7-.4 3.8-1.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                        <path d="M9.9 3.8A6.8 6.8 0 0 1 15 8c-.5 1.4-1.4 2.6-2.6 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                        <path d="M2 2L14 14" stroke="currentColor" strokeWidth="1.3"/>
                       </svg>
                     ) : (
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
-                        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                        <circle cx="8" cy="10.5" r="1" fill="currentColor"/>
                       </svg>
                     )}
                   </button>
@@ -200,22 +198,13 @@ const Login = () => {
                 {errors.password && <span className="lf-error">{errors.password}</span>}
               </div>
 
-              {/* Enlace "¿Olvidaste tu contraseña?" - AHORA ABRE EL MODAL */}
               <div className="lf-forgot">
-                <a 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsModalOpen(true);
-                  }}
-                >
+                <a href="#" onClick={(e) => { e.preventDefault(); setIsModalOpen(true); }}>
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
 
-              {errors.general && (
-                <div className="lf-general-error">{errors.general}</div>
-              )}
+              {errors.general && <div className="lf-general-error">{errors.general}</div>}
 
               <button type="submit" className="lf-submit" disabled={isLoading}>
                 {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión →'}
@@ -230,11 +219,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Modal de recuperación de contraseña */}
-      <ForgotPasswordModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <ForgotPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 };

@@ -1,19 +1,22 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import RootLayout from '../layouts/RootLayout';
-import Dashboard from '../pages/Dashboard';
-import About from '../pages/About';
-import Settings from '../pages/Settings';
-import NotFound from '../pages/NotFound';
-import Login from '../pages/Login';
-import PrivateRoute from './PrivateRoute';
+import RootLayout    from '../layouts/RootLayout';
+import Dashboard     from '../pages/Dashboard';
+import About         from '../pages/About';
+import Settings      from '../pages/Settings';
+import NotFound      from '../pages/NotFound';
+import Login         from '../pages/Login';
+import Register      from '../pages/Register';
+import AdminUsers    from '../pages/AdminUsers';
+import PrivateRoute  from './PrivateRoute';
+import AdminRoute    from './AdminRoute'; // ← NUEVO
 
 export const router = createBrowserRouter([
-  // Ruta pública: Login (sin RootLayout para que tenga su propio look)
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  // Rutas privadas: dentro de RootLayout, todas protegidas
+
+  // ── Rutas públicas ─────────────────────────────────────────────────────────
+  { path: '/login',    element: <Login />    },
+  { path: '/register', element: <Register /> },
+
+  // ── Rutas privadas (cualquier usuario autenticado) ─────────────────────────
   {
     path: '/',
     element: (
@@ -23,14 +26,22 @@ export const router = createBrowserRouter([
     ),
     errorElement: <NotFound />,
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: 'about', element: <About /> },
-      { path: 'settings', element: <Settings /> },
+      { index: true,         element: <Dashboard /> },
+      { path: 'about',      element: <About />     },
+      { path: 'settings',   element: <Settings />  },
+
+      // ── Ruta exclusiva superadmin ───────────────────────────────────────────
+      {
+        path: 'admin/users',
+        element: (
+          <AdminRoute>
+            <AdminUsers />
+          </AdminRoute>
+        ),
+      },
     ],
   },
-  // Cualquier ruta desconocida → redirect a login
-  {
-    path: '*',
-    element: <Navigate to="/login" replace />,
-  },
+
+  // ── Comodín ────────────────────────────────────────────────────────────────
+  { path: '*', element: <Navigate to="/login" replace /> },
 ]);

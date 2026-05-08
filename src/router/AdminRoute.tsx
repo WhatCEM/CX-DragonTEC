@@ -6,26 +6,19 @@ interface AdminRouteProps {
   children: ReactNode;
 }
 
-/**
- * AdminRoute
- *
- * Wrapper para rutas exclusivas de superadmin.
- * - Si no está autenticado → /login
- * - Si está autenticado pero NO es superadmin → / (dashboard)
- * - Si es superadmin → renderiza el children
+/** * Componente de ruta protegida para administradores.
+ * - Sin autenticar        → /login
+ * - Autenticado no-admin  → / (dashboard, silencioso)
+ * - Admin                 → renderiza children
  */
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { user, isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) return null; // Evita flash durante hidratación
+  if (isLoading) return null;
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
-  if (user?.accessType !== 'superadmin') {
-    return <Navigate to="/" replace />;
-  }
+  if (user?.accessType !== 'admin') return <Navigate to="/" replace />;
 
   return <>{children}</>;
 };

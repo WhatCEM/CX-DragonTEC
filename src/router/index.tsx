@@ -6,15 +6,14 @@ import Settings      from '../pages/Settings';
 import NotFound      from '../pages/NotFound';
 import Login         from '../pages/Login';
 import Register      from '../pages/Register';
-import AdminUsers    from '../pages/AdminUsers';
+import AdminUsers    from '../pages/AdminUsers';  
 import PrivateRoute  from './PrivateRoute';
-import AdminRoute    from './AdminRoute'; // ← Ruta exclusiva para superadmin
-import ForgotPassword from '../pages/ForgotPassword'; // ← en vez del modal, ahora es una página independiente
-import ResetPassword from '../pages/ResetPassword';   // ← en vez del modal, ahora es una página independiente
-
+import AdminRoute    from './AdminRoute';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';   
+import NewClient from '../pages/NewClient'; 
 
 export const router = createBrowserRouter([
-
   // ── Rutas públicas ─────────────────────────────────────────────────────────
   { path: '/login',    element: <Login />    },
   { path: '/register', element: <Register /> },
@@ -31,22 +30,26 @@ export const router = createBrowserRouter([
     ),
     errorElement: <NotFound />,
     children: [
-      { index: true,         element: <Dashboard /> },
+      { index: true,        element: <Dashboard /> },
       { path: 'about',      element: <About />     },
       { path: 'settings',   element: <Settings />  },
 
-      // ── Ruta exclusiva superadmin ───────────────────────────────────────────
+      // ── Rutas exclusivas superadmin ───────────────────────────────────────────
+      { 
+        path: 'admin/clients/new', 
+        element: <AdminRoute><NewClient /></AdminRoute> 
+      },
       {
         path: 'admin/users',
         element: (
           <AdminRoute>
             <AdminUsers />
           </AdminRoute>
-        ),
-      },
-    ],
+        )
+      } // <--- Coma agregada automáticamente por la estructura del array
+    ]
   },
 
-  // ── Comodín ────────────────────────────────────────────────────────────────
-  { path: '*', element: <Navigate to="/login" replace /> },
+  // ── Comodín (Fuera de las rutas privadas para capturar errores de login/register) ──
+  { path: '*', element: <Navigate to="/login" replace /> }
 ]);

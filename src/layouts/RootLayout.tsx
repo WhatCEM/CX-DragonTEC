@@ -24,17 +24,17 @@ const RoleBadge = ({ accessType }: { accessType?: string }) => {
 };
 
 const RootLayout = () => {
-  const location  = useLocation();
-  const navigate  = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const appName  = import.meta.env.VITE_APP_NAME || 'DtechCX';
-  const isAdmin  = user?.accessType === 'admin';
+  const appName = import.meta.env.VITE_APP_NAME || 'DtechCX';
+  const isAdmin = user?.accessType === 'admin';
 
   const navItems = [
     { path: '/',         label: 'Dashboard' },
-    { path: '/about',   label: 'About'     },
-    { path: '/settings', label: 'Settings' },
+    { path: '/about',    label: 'About'     },
+    { path: '/settings', label: 'Settings'  },
   ];
 
   const handleLogout = () => {
@@ -59,22 +59,35 @@ const RootLayout = () => {
               </li>
             ))}
 
-            {/* ── Solo admin ve "Usuarios" ── */}
+            {/* ── Solo admin ve "Usuarios" y "Nuevo cliente" ── */}
             {isAdmin && (
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {/* Badge a la IZQUIERDA del botón (solo admin) */}
-                <RoleBadge accessType={user?.accessType} />
-                <Link to="/admin/users"
-                  className={location.pathname === '/admin/users' ? 'active' : ''}
-                  style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#fbbf24' }}>
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-                    <circle cx="6" cy="5" r="3" stroke="currentColor" strokeWidth="1.4"/>
-                    <path d="M1 14c0-3 2-5 5-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                    <path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                  Usuarios
-                </Link>
-              </li>
+              <>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <RoleBadge accessType={user?.accessType} />
+                  <Link to="/admin/users"
+                    className={location.pathname === '/admin/users' ? 'active' : ''}
+                    style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#fbbf24' }}>
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                      <circle cx="6" cy="5" r="3" stroke="currentColor" strokeWidth="1.4"/>
+                      <path d="M1 14c0-3 2-5 5-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                      <path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    Usuarios
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to="/admin/clients/new"
+                    className={location.pathname === '/admin/clients/new' ? 'active' : ''}
+                    style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#fbbf24' }}>
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                      <rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" strokeWidth="1.4"/>
+                      <path d="M8 6v4M6 8h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                    </svg>
+                    Nuevo cliente
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
         </nav>

@@ -4,4 +4,7 @@ export { default as About } from './About';
 export { default as Settings } from './Settings';
 export { default as NotFound } from './NotFound';
 export { default as ForgotPasswordModal } from './ForgotPasswordModal';
-
+export { default as ResetPasswordModal } from './ResetPasswordModal';
+export { default as Register } from './Register';
+export { default as AdminUsers } from './AdminUsers';
+export { default as NewClient } from './NewClient';
